@@ -1,0 +1,110 @@
+[
+  {
+    "id"         : 1,
+    "review"     : "The pizza was delicious, and the service was excellent!",
+    "restaurant" : "Bella Italia",
+    "location"   : "Tokyo, Japan"
+  },
+  {
+    "id"         : 2,
+    "review"     : "A great dining experience with a cozy atmosphere, loved the lasagna.",
+    "restaurant" : "Sweet Treats",
+    "location"   : "Toronto, Canada"
+  },
+  {
+    "id"         : 3,
+    "review"     : "The pasta was a bit overcooked, but the sauce was tasty.",
+    "restaurant" : "Burger Barn",
+    "location"   : "Barcelona, Spain"
+  },
+  {
+    "id"         : 4,
+    "review"     : "Fantastic meatballs but mashed potatoes did not taste home made.",
+    "restaurant" : "Prinsen",
+    "location"   : "Stockholm, Sweden"
+  },
+  {
+    "id"         : 5,
+    "review"     : "I loved the cheesecake, but the main course was just okay.",
+    "restaurant" : "Sweet Treats",
+    "location"   : "Barcelona, Spain"
+  },
+  {
+    "id"         : 6,
+    "review"     : "A dining experience where every dish rises to the occasion!",
+    "restaurant" : "Guolizhuang",
+    "location"   : "Beijing, China"
+  },
+  {
+    "id"         : 7,
+    "review"     : "Service was slow, but the staff was friendly and the lasagna was great.",
+    "restaurant" : "Pasta Palace",
+    "location"   : "Cape Town, South Africa"
+  },
+  {
+    "id"         : 8,
+    "review"     : "Pizza was ok, but why did they put pineapple on it!?",
+    "restaurant" : "Pizzeria Zorba",
+    "location"   : "Stockholm, Sweden"
+  },
+  {
+    "id"         : 9,
+    "review"     : "The pizza was delicious, and the service was excellent!",
+    "restaurant" : "Bella Italia",
+    "location"   : "Tokyo, Japan"
+  },
+  {
+    "id"         : 10,
+    "review"     : "Wonderful food, great service, great atmosphere.",
+    "restaurant" : "Bella Italia",
+    "location"   : "Tokyo, Japan"
+  },
+  {
+    "id"         : 11,
+    "review"     : "The pizza was delicious, and the service was excellent!",
+    "restaurant" : "Pizzeria Zorba",
+    "location"   : "Stockholm, Sweden"
+  },
+  {
+    "id"         : 12,
+    "review"     : "Great pizza and burgers. Decent prices",
+    "restaurant" : "Bossa",
+    "location"   : "Cape Town, South Africa"
+  },
+  {
+    "id"         : 13,
+    "review"     : "My favourite pizza place in town. The staff are friendly and the pizza is delicious.",
+    "restaurant" : "Pizzeria Zorba",
+    "location"   : "Stockholm, Sweden"
+  },
+  {
+    "id"         : 14,
+    "review"     : "Decent food and service.",
+    "restaurant" : "Bossa",
+    "location"   : "Cape Town, South Africa"
+  },
+  {
+    "id"         : 15,
+    "review"     : "Great for the whole family. The staff are friendly and the food is delicious.",
+    "restaurant" : "Bella Italia",
+    "location"   : "Tokyo, Japan"
+  },
+  {
+    "id"         : 16,
+    "review"     : "Fine dining at its best. Great desserts and service.",
+    "restaurant" : "Guolizhuang",
+    "location"   : "Beijing, China"
+  },
+  {
+    "id"         : 17,
+    "review"     : "The pizza was delicious, and the service was excellent!",
+    "restaurant" : "Pizzeria Zorba",
+    "location"   : "Stockholm, Sweden"
+  },
+  {
+    "id"         : 18,
+    "review"     : "The cheesecake was amazing. The staff are friendly and the food is delicious.",
+    "restaurant" : "Sweet Treats",
+    "location"   : "Toronto, Canada"
+  }
+]
