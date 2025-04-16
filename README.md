@@ -40,7 +40,7 @@ Run the development server for this Express app using the following command:
 npm run start
 ```
 
-Open `http://localhost:5173`. You will see a Bryntum Grid:
+Open `http://localhost:3000`. You will see a Bryntum Grid:
 
 ![Initial app](./assets/bryntum-grid-intial.png)
 

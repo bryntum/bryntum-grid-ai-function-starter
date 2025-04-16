@@ -71,8 +71,6 @@ app.post('/api/review/update', async(req, res) => {
             throw new Error('Updated review not found');
         }
 
-        console.log(updatedReview);
-
         // Get only the changed fields plus id
         const changedFields = Object.keys(rest);
         const responseData = {
