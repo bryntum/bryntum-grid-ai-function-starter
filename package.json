@@ -11,8 +11,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@bryntum/grid": "^6.2.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "openai": "^4.94.0",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
     "zod": "^3.24.2"

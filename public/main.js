@@ -1,11 +1,40 @@
-import { StringHelper, Grid } from './grid.module.js';
+import { StringHelper, Grid, Toast, Panel } from './grid.module.js';
 import Restaurant from './lib/Restaurant.js';
 
 const grid = new Grid({
-    appendTo  : 'grid',
-    ui        : 'plain',
-    flex      : '1 1 100%',
-    rowHeight : 60,
+    appendTo         : 'grid',
+    ui               : 'plain',
+    flex             : '1 1 100%',
+    rowHeight        : 60,
+    // When user types =AI( into a cell editor, a base FormulaProvider will be created with this config
+    // It will send a request to the configured URL with the body and the formula.
+    // The `content` property from JSON response will be used to update the cell value.
+    formulaProviders : {
+        AI : {
+            url  : '/formulaPrompt',
+            body : {
+                max_tokens  : 100,
+                // The temperature of the model. Must be between 0 and 2.
+                // Higher values mean the model responses will be more creative.
+                temperature : 1
+            },
+
+            // We can augment the resulting prompt with a listener when the formula changes
+            // Add the extra text from the setting panel to the formula
+            onFormulaChange(event) {
+                event.formula = `${event.formula}. ${grid.settingsPanel.widgetMap.extra.value}`;
+            }
+
+            ,onFormulaNetworkError({ response }) {
+                Toast.show({
+                    html : `<h2>AIFormula network error: ${response.statusText}</h2>
+                              <code>${response.url}</code>
+                              <p>Please ensure that the url is correct and that the server is running.`,
+                    timeout : 3000
+                });
+            }
+        }
+    },
 
     features : {
         sort     : 'restaurant',
@@ -46,25 +75,40 @@ const grid = new Grid({
             autoHeight : true
         },
         {
+            formula    : true,
             text       : 'Response',
             field      : 'response',
             flex       : 2,
+            tooltip    : 'Try typing =AI(Write a nice response to the customer who left this review: $review)',
             autoHeight : true
         },
         {
-            text  : 'Food item',
-            field : 'foodItem',
-            flex  : 1
+            formula : true,
+            text    : 'Food item',
+            field   : 'foodItem',
+            tooltip : 'Try typing =AI(extract the food item from $review)',
+            flex    : 1
         },
         {
-            text  : 'Sentiment',
-            field : 'sentiment',
-            flex  : 1
+            formula : true,
+            text    : 'Sentiment',
+            field   : 'sentiment',
+            tooltip : 'Try typing =AI(Extract the sentiment from $review as one word)',
+            flex    : 1
         },
         {
-            text  : 'Notes',
-            field : 'notes',
-            flex  : 1
+            formula       : true,
+            text          : 'Notes',
+            field         : 'notes',
+            flex          : 1,
+            headerWidgets : [{
+                type    : 'button',
+                style   : 'order:1',
+                tooltip : 'Show settings panel',
+                icon    : 'b-fa b-fa-cog',
+                cls     : 'b-transparent',
+                onClick : 'up.onSettingsClick'
+            }]
         }
     ],
 
@@ -93,5 +137,48 @@ const grid = new Grid({
                 body.data[0].notes = '';
             }
         }
+    },
+
+    onPaint({ firstPaint }) {
+        if (firstPaint) {
+            this.settingsPanel = new Panel({
+                drawer   : true,
+                width    : '37em',
+                title    : 'Settings',
+                defaults : {
+                    labelWidth : '10em'
+                },
+                items : {
+                    extra : {
+                        type   : 'textarea',
+                        height : '15em',
+                        label  : 'Global Prompt Suffix',
+                        value  : `Please return the result using the language of ${this.localeManager.locale.localeCode}. If message indicates just one word or number, character, image, or emoji is requested, return just *one* such item, and no extra text.`
+                    },
+                    temperature : {
+                        type        : 'slider',
+                        flex        : '1 0 100%',
+                        label       : 'Temperature',
+                        min         : 0,
+                        max         : 2,
+                        value       : 1,
+                        step        : 0.1,
+                        onChange    : ({ value }) => this.onTemperatureChange(value),
+                        showTooltip : true
+                    }
+                }
+            });
+        }
+    },
+
+    onSettingsClick() {
+        const { settingsPanel } = this;
+        settingsPanel[settingsPanel.isVisible ? 'hide' : 'show']();
+    },
+
+    onTemperatureChange(value) {
+        // Adjust configuration block, which is used by all instances
+        const roundedValue = Math.round(value * 10) / 10;
+        this.formulaProviders.AI.body.temperature = roundedValue;
     }
 });

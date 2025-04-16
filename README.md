@@ -34,13 +34,19 @@ This creates SQLite database in the root folder, called `database.sqlite3`, and 
 
 The reviews data model is in the `src/models` folder. There are four API endpoints in the `src/index.ts` file for the Bryntum Grid to get reviews data from the local SQLite database and to sync data changes on the client to the database.
 
+Create a `.env` file and add the following environmental variable to it:
+
+```
+PORT=3000
+```
+
 Run the development server for this Express app using the following command:
 
 ```bash
-npm run start
+npm run dev
 ```
 
-Open `http://localhost:5173`. You will see a Bryntum Grid:
+Open `http://localhost:3000`. You will see a Bryntum Grid:
 
 ![Initial app](./assets/bryntum-grid-intial.png)
 
