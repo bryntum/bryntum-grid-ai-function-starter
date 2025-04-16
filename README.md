@@ -10,7 +10,7 @@ Install the dependencies:
 npm install
 ```
 
-Install the Bryntum Grid by first getting access to the Bryntum registry using the [set up guide](https://www.bryntum.com/docs/grid/guide/Grid/quick-start/javascript-npm#step-1---access-to-npm-registry). You can then install the Bryntum Grid with one of the following commands:
+Install the Bryntum Grid by first getting access to the Bryntum registry using the [set up guide](https://bryntum.com/products/grid/docs/guide/Grid/npm-repository). You can then install the Bryntum Grid with one of the following commands:
 
 - Trial version:
 
@@ -34,10 +34,13 @@ This creates SQLite database in the root folder, called `database.sqlite3`, and 
 
 The reviews data model is in the `src/models` folder. There are four API endpoints in the `src/index.ts` file for the Bryntum Grid to get reviews data from the local SQLite database and to sync data changes on the client to the database.
 
-Create a `.env` file and add the following environmental variable to it:
+Create an OpenAI API key in your OpenAI [organization settings](https://platform.openai.com/settings/organization/api-keys).
+
+Create a `.env` file and add the following environmental variables to it:
 
 ```
 PORT=3000
+OPENAI_API_KEY=your-openai-key
 ```
 
 Run the development server for this Express app using the following command:
