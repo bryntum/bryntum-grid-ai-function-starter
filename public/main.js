@@ -76,21 +76,26 @@ const grid = new Grid({
         deleteUrl  : '/api/review/delete',
         autoLoad   : true,
         autoCommit : true,
-        onBeforeRequest({ body }) {
-            if (!body?.data) return;
-            const { data } = body;
-            const { response, foodItem, sentiment, notes } = data[0];
-            if (typeof response === 'object') {
-                body.data[0].response = '';
-            }
-            if (typeof foodItem === 'object') {
-                body.data[0].foodItem = '';
-            }
-            if (typeof sentiment === 'object') {
-                body.data[0].sentiment = '';
-            }
-            if (typeof notes === 'object') {
-                body.data[0].notes = '';
+        onBeforeRequest(args) {
+            const { body } = args;
+            if (!body?.data?.length) return;
+
+            const FIELDS = ['response', 'foodItem', 'sentiment', 'notes'];
+
+            // Look for the first record that contains an empty object in one of the fields
+            const emptyObjectField = body.data.find(record =>
+                FIELDS.some(field => {
+                    const v = record[field];
+                    return v &&
+                           typeof v === 'object' &&
+                           !Array.isArray(v) &&
+                           Object.keys(v).length === 0;
+                })
+            );
+
+            if (emptyObjectField) {
+                // Throwing  aborts the request in Bryntum
+                throw new Error('Update cancelled: empty object detected in response / foodItem / sentiment / notes');
             }
         }
     }
