@@ -7,7 +7,7 @@ export const ReviewSchema = z.object({
     review     : z.string().optional(),
     response   : z.string().optional(),
     foodItem   : z.string().optional(),
-    sentiment  : z.number().optional(),
+    sentiment  : z.string().optional(),
     notes      : z.string().optional()
 });
 

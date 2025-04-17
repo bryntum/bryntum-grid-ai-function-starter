@@ -5,6 +5,7 @@ import 'dotenv/config';
 import Review from './models/Review';
 import { Op } from 'sequelize';
 import { OpenAI } from 'openai';
+import { ReviewSchemaType } from './types';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,12 +47,17 @@ app.get('/api/reviews', async(req, res) => {
 
 app.post('/api/review/create', async(req, res) => {
     const { data } = req.body;
-    const { id, ...rest } = data[0];
+
     try {
-        const newReview = await Review.create(rest);
+        const newReviews = await Promise.all(
+            data.map(({ id, ...rest }: ReviewSchemaType) =>
+                Review.create(rest)
+            )
+        );
+
         res.status(201).json({
             success : true,
-            data    : [newReview]
+            data    : newReviews
         });
     }
     catch (error) {
@@ -65,31 +71,20 @@ app.post('/api/review/create', async(req, res) => {
 
 app.post('/api/review/update', async(req, res) => {
     const { data } = req.body;
-    const { id, ...rest } = data[0];
+
     try {
-        await Review.update(
-            { ...rest },
-            { where : { id } }
-        );
-        const updatedReview = await Review.findByPk(id);
-        if (!updatedReview) {
-            throw new Error('Updated review not found');
-        }
+    // update every row that came in
+        await Promise.all(
+            data.map(({ id, ...changes }: ReviewSchemaType) =>
+                Review.update(changes, { where : { id } })
 
-        // Get only the changed fields plus id
-        const changedFields = Object.keys(rest);
-        const responseData = {
-            id,
-            ...Object.fromEntries(
-                Object.entries(updatedReview.dataValues)
-                    .filter(([key]) => changedFields.includes(key))
             )
-        };
+        );
 
-        res.status(201).json({
-            success : true,
-            data    : [responseData]
-        });
+        // pick back only the fields you changed, plus id
+        const responseData = data.map(({ id, ...changes }: ReviewSchemaType) => ({ id, ...changes }));
+
+        res.status(200).json({ success : true, data : responseData });
     }
     catch (error) {
         console.error(error);
