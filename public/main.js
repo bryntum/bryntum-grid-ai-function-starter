@@ -13,16 +13,13 @@ const grid = new Grid({
         AI : {
             url  : '/formulaPrompt',
             body : {
-                max_tokens  : 100,
-                // The temperature of the model. Must be between 0 and 2.
-                // Higher values mean the model responses will be more creative.
-                temperature : 1
+                max_tokens : 100
             },
-
             // We can augment the resulting prompt with a listener when the formula changes
             // Add the extra text from the setting panel to the formula
             onFormulaChange(event) {
                 event.formula = `${event.formula}. ${grid.settingsPanel.widgetMap.extra.value}`;
+                event.source.body.temperature = Math.round(grid.settingsPanel.widgetMap.temperature.value * 10) / 10;
             }
 
             ,onFormulaNetworkError({ response }) {
@@ -141,6 +138,15 @@ const grid = new Grid({
 
     onPaint({ firstPaint }) {
         if (firstPaint) {
+            const savedSettings = localStorage.getItem('globalPromptSettings');
+            const settings = savedSettings ? JSON.parse(savedSettings) : {
+                globalPrompt : `Please return the result using the language of ${this.localeManager.locale.localeCode}. If message indicates just one word or number, character, image, or emoji is requested, return just *one* such item, and no extra text.`,
+                temperature  : 1.0
+            };
+            if (!savedSettings) {
+                this.saveGlobalPrompt(settings);
+            }
+
             this.settingsPanel = new Panel({
                 drawer   : true,
                 width    : '37em',
@@ -150,20 +156,22 @@ const grid = new Grid({
                 },
                 items : {
                     extra : {
-                        type   : 'textarea',
-                        height : '15em',
-                        label  : 'Global Prompt Suffix',
-                        value  : `Please return the result using the language of ${this.localeManager.locale.localeCode}. If message indicates just one word or number, character, image, or emoji is requested, return just *one* such item, and no extra text.`
+                        type     : 'textarea',
+                        height   : '15em',
+                        label    : 'Global Prompt Suffix',
+                        value    : settings.globalPrompt,
+                        onChange : ({ value }) => this.saveGlobalPrompt({ globalPrompt : value })
                     },
                     temperature : {
-                        type        : 'slider',
-                        flex        : '1 0 100%',
-                        label       : 'Temperature',
-                        min         : 0,
-                        max         : 2,
-                        value       : 1,
-                        step        : 0.1,
-                        onChange    : ({ value }) => this.onTemperatureChange(value),
+                        type     : 'slider',
+                        flex     : '1 0 100%',
+                        label    : 'Temperature',
+                        min      : 0,
+                        max      : 2,
+                        step     : 0.1,
+                        value    : settings.temperature,
+                        onChange : ({ value }) => this.onTemperatureChange(value),
+
                         showTooltip : true
                     }
                 }
@@ -176,9 +184,21 @@ const grid = new Grid({
         settingsPanel[settingsPanel.isVisible ? 'hide' : 'show']();
     },
 
+    saveGlobalPrompt(updates) {
+        const currentSettings = JSON.parse(localStorage.getItem('globalPromptSettings') || '{}');
+
+        const newSettings = {
+            ...currentSettings,
+            ...updates
+        };
+
+        localStorage.setItem('globalPromptSettings', JSON.stringify(newSettings));
+    },
+
     onTemperatureChange(value) {
         // Adjust configuration block, which is used by all instances
         const roundedValue = Math.round(value * 10) / 10;
         this.formulaProviders.AI.body.temperature = roundedValue;
+        this.saveGlobalPrompt({ temperature : roundedValue });
     }
 });
