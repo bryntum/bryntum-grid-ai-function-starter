@@ -16,7 +16,7 @@ const grid = new Grid({
                 max_tokens : 100
             },
             // We can augment the resulting prompt with a listener when the formula changes
-            // Add the extra text from the setting panel to the formula
+            // Add the extra text from the settings panel to the formula
             onFormulaChange(event) {
                 event.formula = `${event.formula}. ${grid.settingsPanel.widgetMap.extra.value}`;
                 event.source.body.temperature = Math.round(grid.settingsPanel.widgetMap.temperature.value * 10) / 10;
